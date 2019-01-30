@@ -11,6 +11,7 @@
 #include <mymessagebox.h>
 #include <adminpanelforedit.h>
 #include <QMessageBox>
+#include <insertdisciplinewidget.h>
 
 class AdminInterface : public QWidget
 {
@@ -20,13 +21,17 @@ public:
     QPushButton *EditPoint;
     QPushButton *DeleteStudentButton;
     QPushButton *InsertStudentButton;
+    QPushButton *InsertDiscipline;
     MyMessageBox *message;
     AdminPanelForEdit *panelForEdit;
+    InsertDisciplineWidget *panelForEditDisc;
 
 signals:
     void deleteUserSignal(QString);
     void repeatUserList();
     void createTablePoint(QString);
+    void createTableDiscipline();
+    void idUser(QString);
 public slots:
     void createUserList(QMap<QString,unsigned int> UserListMap);
     void openEditWindowForInsert();
@@ -35,12 +40,14 @@ public slots:
     void deleteUserDone(bool);
     void editPointUser();
     void closeAdminPanelForEdit();
+    void insertDiscipline();
 private:
     QHBoxLayout *CentralLayout;
     QVBoxLayout *RightLayout;
     QTableWidget *tabl;
     QMessageBox *DeleteOk;
     QMessageBox *CheckUncheck;
+    QMap<QString,unsigned int> List;
 
 };
 

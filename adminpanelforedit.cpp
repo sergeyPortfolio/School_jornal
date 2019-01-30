@@ -1,4 +1,5 @@
 #include "adminpanelforedit.h"
+#include <QDebug>
 
 AdminPanelForEdit::AdminPanelForEdit(QWidget *parent) : QWidget(parent)
 {
@@ -11,6 +12,7 @@ AdminPanelForEdit::AdminPanelForEdit(QWidget *parent) : QWidget(parent)
     CentralLayout = new QVBoxLayout(this);
     BottomLayout = new QHBoxLayout(this);
     deletePoint = new QPushButton("Видалити оцінку",this);
+    deleteALlPoint = new QPushButton("Видалити усі оцінки",this);
 
     CentralLayout->addWidget(tabl);
     CentralLayout->addLayout(BottomLayout);
@@ -19,10 +21,14 @@ AdminPanelForEdit::AdminPanelForEdit(QWidget *parent) : QWidget(parent)
     BottomLayout->addWidget(windowForPoint);
     BottomLayout->addWidget(insertPoint);
     BottomLayout->addWidget(deletePoint);
+    BottomLayout->addWidget(deleteALlPoint);
     BottomLayout->addWidget(cancel);
 
     globalLocal->insertItem(0,"Поточна");
     globalLocal->insertItem(1,"Тематична");
+    connect(this->deletePoint,SIGNAL(clicked()),this,SLOT(deletePointSlot()));
+    connect(this->insertPoint,SIGNAL(clicked()),this,SLOT(editPointSlot()));
+    connect(this->deleteALlPoint,SIGNAL(clicked()),this,SLOT(deleteAllPointSlot()));
 }
 
 void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
@@ -33,7 +39,7 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
     QString key1;
     QString pointCast;
     int row =0;
-
+qDebug() << map;
     int columGlob =0;
     int columLoc = 0;
 
@@ -47,7 +53,7 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
           row = tabl->rowCount()+1;
           tabl->setRowCount(row);
           tabl->setVerticalHeaderItem(row-1,itemDiscipline);
-          tabl->setEditTriggers(QAbstractItemView::NoEditTriggers);          //редактирование
+          tabl->setEditTriggers(QAbstractItemView::NoEditTriggers); //редактирование
 
           int countLocal =columGlob;
           int countGlobal = 0;
@@ -69,7 +75,7 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
                          QTableWidgetItem* itemPoint = new QTableWidgetItem;
                          pointCast = QString::number(itt.value());
                          itemPoint->setText(pointCast);
-                         itemPoint->setCheckState(Qt::Unchecked);
+                        // itemPoint->setCheckState(Qt::Unchecked);
                          tabl->setItem(row-1, columGlob-1, itemPoint);
                          tabl->setColumnWidth(columGlob-1,80);
                          itemPoint->setTextAlignment(Qt::AlignCenter);
@@ -82,7 +88,7 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
                           QTableWidgetItem* itemPoint = new QTableWidgetItem;
                           pointCast = QString::number(itt.value());
                           itemPoint->setText(pointCast);
-                          itemPoint->setCheckState(Qt::Unchecked);
+                         // itemPoint->setCheckState(Qt::Unchecked);
                           tabl->setItem(row-1, countGlobal, itemPoint);
                           itemPoint->setTextAlignment(Qt::AlignCenter);
                           countGlobal++;
@@ -95,7 +101,7 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
                           QTableWidgetItem* itemPoint = new QTableWidgetItem;
                           pointCast = QString::number(itt.value());
                           itemPoint->setText(pointCast);
-                          itemPoint->setCheckState(Qt::Unchecked);
+                          //itemPoint->setCheckState(Qt::Unchecked);
                           tabl->setItem(row-1, columGlob, itemPoint);
                           tabl->setColumnWidth(columGlob,80);
                           itemPoint->setTextAlignment(Qt::AlignCenter);
@@ -115,20 +121,22 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
                         QTableWidgetItem* itemPoint = new QTableWidgetItem;
                         pointCast = QString::number(itt.value());
                         itemPoint->setText(pointCast);
-                        itemPoint->setCheckState(Qt::Unchecked);
+                        //itemPoint->setCheckState(Qt::Unchecked);
                         tabl->setItem(row-1, columLoc-1, itemPoint);
                         tabl->setColumnWidth(columLoc-1,80);
                         itemPoint->setTextAlignment(Qt::AlignCenter);
+                        countLocal++;
                      }
                      else if(tabl->columnCount() !=0 && columLoc > countLocal)
                      {
                          QTableWidgetItem* itemPoint = new QTableWidgetItem;
                          pointCast = QString::number(itt.value());
                          itemPoint->setText(pointCast);
-                         itemPoint->setCheckState(Qt::Unchecked);
+                        // itemPoint->setCheckState(Qt::Unchecked);
                          tabl->setItem(row-1, countLocal, itemPoint);
                          itemPoint->setTextAlignment(Qt::AlignCenter);
                          countLocal++;
+
                       }
                      else if(tabl->columnCount() !=0 && columLoc <= countLocal)
                      {
@@ -138,7 +146,7 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
                          QTableWidgetItem* itemPoint = new QTableWidgetItem;
                          pointCast = QString::number(itt.value());
                          itemPoint->setText(pointCast);
-                         itemPoint->setCheckState(Qt::Unchecked);
+                        // itemPoint->setCheckState(Qt::Unchecked);
                          tabl->setItem(row-1, columLoc-1, itemPoint);
                          tabl->setColumnWidth(columLoc-1,80);
                          itemPoint->setTextAlignment(Qt::AlignCenter);
@@ -147,5 +155,101 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
                  }
   }
       }
-    tabl->show();
+     int countTabl = tabl->rowCount();
+     if(tabl->columnCount()==0)
+     {
+         tabl->setColumnCount(1);
+     }
+     for(int i = 0; i < countTabl; i++)
+     {
+         if(tabl->item(i,0) == 0)
+         {
+              QTableWidgetItem* item = new QTableWidgetItem;
+              item->setText("");
+              tabl->setItem(i,0,item);
+         }
+     }
+     tabl->show();
+}
+
+void AdminPanelForEdit::deletePointSlot()
+{
+    message = new QMessageBox();
+    auto index = tabl->selectedItems();
+    if(index.empty())
+    {
+        message->setText("Натисніть на оцінку");
+        message->show();
+    }
+    else
+    {
+       QString Point = index[0]->text();
+       QString Type = tabl->horizontalHeaderItem(index[0]->column())->text();
+       QString NameDiscipline = tabl->verticalHeaderItem(index[0]->row())->text();
+
+       emit deletePointSignal(idName,NameDiscipline,Type,Point);
+    }
+}
+
+void AdminPanelForEdit::idUserSlot(QString nameUser )
+{
+    qDebug() << nameUser;
+    idName = nameUser;
+}
+
+void AdminPanelForEdit::editPointSlot()
+{
+    message = new QMessageBox();
+    auto index = tabl->selectedItems();
+    //QString disc = tabl->row(index)
+    if(index.empty())
+    {
+        message->setText("Натисніть на назву дисципліни");
+        message->show();
+    }
+    else
+    {
+       QString Point;
+       QString Type;
+
+       if( windowForPoint->text().isEmpty())
+       {
+           message->setText("Введіть оцінку");
+           message->show();
+       }
+       else
+       {
+           Point  = windowForPoint->text();
+       }
+
+       if(globalLocal->currentText() == "Поточна")
+       {
+           Type = "local";
+       }
+       else
+       {
+           Type = "global";
+       }
+
+       QString NameDiscipline = tabl->verticalHeaderItem(index[0]->row())->text();
+
+       emit editPointSignal(idName,NameDiscipline,Type,Point);
+       windowForPoint->setText(NULL);
+    }
+}
+
+void AdminPanelForEdit::deleteAllPointSlot()
+{
+    message = new QMessageBox();
+    auto index = tabl->selectedItems();
+    if(index.empty())
+    {
+        message->setText("Натисніть на назву дисципліни");
+        message->show();
+    }
+    else
+    {
+      QString NameDiscipline = tabl->verticalHeaderItem(index[0]->row())->text();
+      emit deleteAllPointSignal(idName,NameDiscipline);
+    }
 }

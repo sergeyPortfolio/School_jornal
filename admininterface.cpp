@@ -14,22 +14,27 @@ AdminInterface::AdminInterface(QWidget *parent) : QWidget(parent)
     EditPoint = new QPushButton("Додати оцінку",this);
     DeleteStudentButton = new QPushButton("Видалити учня",this);
     InsertStudentButton = new QPushButton("Додати учня",this);
+    InsertDiscipline = new QPushButton("Додати дисципліни",this);
     message = new MyMessageBox();
     panelForEdit = new AdminPanelForEdit();
+    panelForEditDisc = new InsertDisciplineWidget();
 
     RightLayout->addWidget(EditPoint);
+    RightLayout->addWidget(InsertDiscipline);
     RightLayout->addWidget(DeleteStudentButton);
     RightLayout->addWidget(InsertStudentButton);
     connect(this->InsertStudentButton,SIGNAL(clicked()),this,SLOT(openEditWindowForInsert()));
     connect(this->DeleteStudentButton,SIGNAL(clicked()),this,SLOT(deleteUser()));
     connect(this->EditPoint,SIGNAL(clicked()),this,SLOT(editPointUser()));
     connect(this->panelForEdit->cancel,SIGNAL(clicked()),this,SLOT(closeAdminPanelForEdit()));
+    connect(this->InsertDiscipline,SIGNAL(clicked()),this,SLOT(insertDiscipline()));
+    connect(this,SIGNAL(idUser(QString)),this->panelForEdit,SLOT(idUserSlot(QString)));
 
-    //qDebug()<<"f";
 }
 
 void AdminInterface::createUserList(QMap<QString, unsigned int> UserListMap)
 {
+    List = UserListMap;
     //qDebug()<<UserListMap;
     tabl->clear();
     int row=0;
@@ -81,11 +86,21 @@ void AdminInterface::deleteUser()
     }
     else
     {
-       QString nameStudent = index[0]->text();
-       emit deleteUserSignal(nameStudent);
-
+        QAbstractButton *yes = CheckUncheck->addButton("Так",QMessageBox::YesRole);
+        QAbstractButton *no = CheckUncheck->addButton("Ні",QMessageBox::NoRole);
+        CheckUncheck->setText("\t\t\t\tВи впевнені ? \nПри видаленні учня, усі його данні, включаючи оцінки буде знищенно");
+        CheckUncheck->exec();
+        if(CheckUncheck->clickedButton() == yes)
+        {
+            QString nameStudent = index[0]->text();
+            emit deleteUserSignal(nameStudent);
+            CheckUncheck->close();
+        }
+        else
+        {
+            CheckUncheck->close();
+        }
     }
-
 }
 
 void AdminInterface::deleteUserDone(bool b)
@@ -116,7 +131,9 @@ void AdminInterface::editPointUser()
     else
     {
        QString nameStudent = index[0]->text();
+       //unsigned int number = List[nameStudent];
        emit createTablePoint(nameStudent);
+       emit idUser(nameStudent);
        panelForEdit->show();
     }
 
@@ -127,6 +144,12 @@ void AdminInterface::editPointUser()
 void AdminInterface::closeAdminPanelForEdit()
 {
     panelForEdit->close();
+}
+
+void AdminInterface::insertDiscipline()
+{
+    emit createTableDiscipline();
+    panelForEditDisc->show();
 }
 
 

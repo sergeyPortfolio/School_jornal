@@ -7,6 +7,7 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
     QFile file("MySettings.txt");
         if(file.open(QIODevice::ReadOnly |QIODevice::Text))
         {
+
                ForReadcity = file.readLine();
                ForReadschool = file.readLine();
                ForReadclass = file.readLine();
@@ -18,6 +19,7 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
                ForReadclass.remove("\n");
                ForReadname.remove("\n");
                ForReadpass.remove("\n");
+               qDebug() << ForReadname.toUtf8();
         }
         else
         {
@@ -34,10 +36,10 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
 
     EnterHLayout->setAlignment(Qt::AlignCenter);
 
-    CityLabel = new QLabel("Город",this);
+    CityLabel = new QLabel("Місто",this);
     SchoolLabel = new QLabel("Школа",this);
-    ClassLabel = new QLabel("Класс",this);
-    FirstNameLabel = new QLabel("Фамилия и инициалы",this);
+    ClassLabel = new QLabel("Клас",this);
+    FirstNameLabel = new QLabel("Прізвище та ініціали",this);
     PassLabel = new QLabel("Пароль",this);
 
     CityLabel->setFixedWidth(150);
@@ -65,8 +67,8 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
     PassLineEdit->setAlignment(Qt::AlignLeft);
 
 
-    EnterButton = new QPushButton("Вход",this);
-    SaveDataCheckBox = new QCheckBox("Сохранить пароль",this);
+    EnterButton = new QPushButton("Увійти",this);
+    SaveDataCheckBox = new QCheckBox("Зберегти пароль",this);
     EnterButton->setFixedWidth(100);
 
 
@@ -109,14 +111,16 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
 
 void authorForm::MyClikc()
 {
+    bool save = false;
     if(SaveDataCheckBox->isChecked()){
-    emit TestDataSave(CityLineEdit->text(),SchoolLineEdit->text(),
-                      ClassLineEdit->text(),FirstNameLineEdit->text(),
-                      PassLineEdit->text());
-}
-    emit MyAuthorization(CityLineEdit->text(),SchoolLineEdit->text(),
+        emit TestDataSave(CityLineEdit->text(),SchoolLineEdit->text(),
                          ClassLineEdit->text(),FirstNameLineEdit->text(),
                          PassLineEdit->text());
+        save = true;
+    }
+    emit MyAuthorization(CityLineEdit->text(),SchoolLineEdit->text(),
+                         ClassLineEdit->text(),FirstNameLineEdit->text(),
+                         PassLineEdit->text(),save);
 
     emit TextForTopInterf(CityLineEdit->text(),SchoolLineEdit->text(),
                           ClassLineEdit->text(),FirstNameLineEdit->text());

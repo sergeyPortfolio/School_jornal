@@ -94,6 +94,7 @@ void UserReiting::createTable(QMap<QString,QMultiMap<QString,int>> map)
                        tabl->setItem(row-1, columLoc-1, itemPoint);
                        tabl->setColumnWidth(columLoc-1,80);
                        itemPoint->setTextAlignment(Qt::AlignCenter);
+                       countLocal++;
                     }
                     else if(tabl->columnCount() !=0 && columLoc > countLocal)
                     {

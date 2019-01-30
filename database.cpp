@@ -9,7 +9,7 @@ void DataBase::connectToDataBase()
 {
     db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("localhost");
-    db.setDatabaseName("school_jor");
+    db.setDatabaseName("school_jornal");
     db.setUserName("root");
     db.setPassword("root");
     if(!db.open()){
@@ -25,6 +25,7 @@ void DataBase::connectToDataBase()
 
 void DataBase::createTableRaiting(QString nameUserKey)
 {
+    QMap<QString,QMultiMap<QString,int>> myMap;
     QString idText = "";
     if(nameUserKey == "user")
     {
@@ -35,10 +36,27 @@ void DataBase::createTableRaiting(QString nameUserKey)
         unsigned int id_user = myMapUserList[nameUserKey];
         idText = QString::number(id_user);
     }
-   if(query.exec("SELECT disc_name,type_point,point FROM point WHERE id_user = "+idText+" " "ORDER BY FIELD (type_point, 'global','local')"))
+
+    if(query.exec("SELECT name_disc FROM discipline WHERE city ='"+CityAdmin+"'AND school ='"+SchoolAdmin+"' AND class = '"+ClassAdmin+"'"))
+    {
+       QString key;
+       QMultiMap<QString,int> pairMap;
+       while(query.next())
+       {
+
+           key = query.value(0).toString();
+           myMap.insert(key,pairMap);
+       }
+
+    }
+    else
+    {
+        qDebug() << "no discipline";
+    }
+   if(query.exec("SELECT disc_name,type_point,point FROM point WHERE id_user = "+idText+" ORDER BY id DESC"))
    {
 
-       QMap<QString,QMultiMap<QString,int>> myMap;
+
        QString key;
 
         while(query.next())
@@ -62,7 +80,6 @@ void DataBase::createTableRaiting(QString nameUserKey)
             }
 
        }
-        //qDebug() << myMap;
         emit  createTableRaitingSignal(myMap);
 
    }
@@ -72,12 +89,84 @@ void DataBase::createTableRaiting(QString nameUserKey)
    }
 }
 
+void DataBase::createTableDiscipline()
+{
+    if(query.exec("SELECT id_disc,name_disc FROM discipline WHERE city ='"+CityAdmin+"'AND school ='"+SchoolAdmin+"' AND class = '"+ClassAdmin+"'"))
+    {
+        QMap<QString,unsigned int> discip;
+        while(query.next())
+        {
+            discip.insert(query.value(1).toString(),query.value(0).toUInt());
+        }
+        emit createTableDisciplineSignal(discip);
+    }
+    else
+    {
+        qDebug() << "no discip";
+    }
+}
+
+void DataBase::editDiscipline(QString name_disc)
+{
+
+    if(query.exec( "INSERT INTO discipline (id_disc,name_disc,city,school,class) values(default, '"+name_disc+"','"+CityAdmin+"','"+SchoolAdmin+"','"+ClassAdmin+"')"))
+    {
+        createTableDiscipline();
+    }
+
+}
+
+void DataBase::deleteDiscipline(QString nameDisc)
+{
+    if(query.exec("DELETE FROM discipline WHERE name_disc ='"+nameDisc+"' AND city = '"+CityAdmin+"' AND school ='"+SchoolAdmin+"' AND class = '"+ClassAdmin+"'"))
+    {
+        createTableDiscipline();
+    }
+}
+
+void DataBase::deletePointSlot(QString idName,QString nameDisc, QString Type, QString Point)
+{
+    QString t;
+    if(Type == "Тематична")
+    {
+        t = "global";
+    }
+    else if( Type == "Поточна")
+    {
+        t = "local";
+    }
+    unsigned int id = myMapUserList[idName];
+
+    if(query.exec("DELETE FROM point WHERE id_user ='"+QString::number(id)+"' AND disc_name ='"+nameDisc+"' AND type_point = '"+t+"' AND point ='"+Point+"'"))
+    {
+        createTableRaiting(idName);
+    }
+}
+
+void DataBase::editPointSlot(QString idName, QString nameDisc, QString Type, QString Point)
+{
+    unsigned int id = myMapUserList[idName];
+
+    if(query.exec("INSERT INTO point (id,id_user,disc_name,type_point,point) values(default, '"+QString::number(id)+"','"+nameDisc+"','"+Type+"','"+Point+"')"))
+    {
+        createTableRaiting(idName);
+    }
+}
+
+void DataBase::deleteAllPointSlot(QString idName, QString nameDisc)
+{
+    qDebug() <<idName << nameDisc;
+    unsigned int id = myMapUserList[idName];
+    if(query.exec("DELETE FROM point WHERE id_user ='"+QString::number(id)+"' AND disc_name ='"+nameDisc+"' AND type_point = 'local'"))
+    {
+        createTableRaiting(idName);
+    }
+}
+
 void DataBase::createTableListUser()
 {
     myMapUserList.clear();
-    //qDebug() << CityAdmin;
-    //qDebug() << SchoolAdmin.toInt();
-    //qDebug() << ClassAdmin;
+
   if(query.exec("SELECT id_user,name FROM users "
                 "WHERE city='"+CityAdmin+
                 "'AND school='"+SchoolAdmin+
@@ -103,23 +192,27 @@ void DataBase::createTableListUser()
 void DataBase::deleteUserList(QString key)
 {
     unsigned int id_user = myMapUserList[key];
-    if(query.exec("DELETE FROM users WHERE id_user ='"+QString::number(id_user)+"'"))
+    if(query.exec("DELETE FROM point WHERE id_user ='"+QString::number(id_user)+"'"))
     {
-        emit deleteDoneOr(true);
+        if(query.exec("DELETE FROM users WHERE id_user ='"+QString::number(id_user)+"'"))
+        {
+            emit deleteDoneOr(true);
+        }
+        else
+        {
+            emit deleteDoneOr(false);
+        }
     }
     else
     {
         emit deleteDoneOr(false);
     }
-
-
 }
 
 
-void DataBase::AuthorSql(const QString city, const QString school, const QString clas, const QString firstn, const QString pass)
+void DataBase::AuthorSql(const QString city, const QString school, const QString clas, const QString firstn, const QString pass , bool save)
 {
-
-    if(query.exec( "SELECT id_user,law FROM users "
+    if(query.exec( "SELECT id_user,law,accses FROM users "
                    "WHERE city='"+city+"' "
                    "AND school='"+school+"' "
                    "AND class='"+clas+"' "
@@ -127,27 +220,36 @@ void DataBase::AuthorSql(const QString city, const QString school, const QString
                    "AND pass='"+pass+"'" ))
     {
 
+
         CityAdmin = city;
         SchoolAdmin = school;
         ClassAdmin = clas;
         QString law;
-
+        QString accses;
         while(query.next())
         {
+            qDebug() << query.value(0).toInt();
+           // qDebug() << query.value(1).toString();
            id = query.value(0).toInt();
            law = query.value(1).toString();
+           accses = query.value(2).toString();
+          //qDebug() << id << law;
         }
 
         //qDebug() << law;
-        emit OpenNewWindow(id,law);
+        emit OpenNewWindow(id,law,accses,save);
 
         if(law == "user")
         {
             createTableRaiting("user");
         }
-        else
+        else if(law =="admin")
         {
             createTableListUser();
+        }
+        else
+        {    id = 0;
+             emit OpenNewWindow(id,law,accses,save);
         }
     }
     else

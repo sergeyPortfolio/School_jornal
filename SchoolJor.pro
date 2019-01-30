@@ -33,7 +33,8 @@ SOURCES += \
     userreiting.cpp \
     admininterface.cpp \
     mymessagebox.cpp \
-    adminpanelforedit.cpp
+    adminpanelforedit.cpp \
+    insertdisciplinewidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +44,8 @@ HEADERS += \
     userreiting.h \
     admininterface.h \
     mymessagebox.h \
-    adminpanelforedit.h
+    adminpanelforedit.h \
+    insertdisciplinewidget.h
 
 FORMS += \
         mainwindow.ui

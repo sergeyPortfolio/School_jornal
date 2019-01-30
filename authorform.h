@@ -48,9 +48,9 @@ public:
    QPushButton *EnterButton;
 
 signals:
-   void MyAuthorization(QString city,QString school, QString clas,QString firstn,QString pass);
-   void TextForTopInterf(QString city,QString school, QString clas,QString firstn);
-   void TestDataSave(QString city,QString school, QString clas,QString firstn,QString pass);
+   void MyAuthorization(QString,QString, QString,QString,QString,bool);
+   void TextForTopInterf(QString,QString, QString,QString);
+   void TestDataSave(QString,QString,QString,QString,QString);
    void clicked();
 public slots:
    void MyClikc();

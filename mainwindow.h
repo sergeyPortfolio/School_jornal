@@ -11,6 +11,7 @@
 #include "userreiting.h"
 #include <QMultiMap>
 #include <QPair>
+#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +26,7 @@ public:
     ~MainWindow();
 
 public slots:
-    void CreateNewWindow(int id,QString law);
+    void CreateNewWindow(int id,QString law,QString accses,bool save);
     void ForSave(QString Ucity, QString Uschool,QString Uclass,QString Uname,QString Upass);
     void ReturnAuthorization();
 private:
@@ -42,6 +43,7 @@ private:
     DataBase *dataBd;
     UserReiting *user;
     AdminInterface *admin;
+    QMessageBox *message;
 
     void saveDataFile(QString Ucity, QString Uschool,QString Uclass,QString Uname,QString Upass);
 };
