@@ -1,6 +1,5 @@
 #include "admininterface.h"
-#include <QList>
-#include<QDebug>
+
 AdminInterface::AdminInterface(QWidget *parent) : QWidget(parent)
 {
 
@@ -35,7 +34,6 @@ AdminInterface::AdminInterface(QWidget *parent) : QWidget(parent)
 void AdminInterface::createUserList(QMap<QString, unsigned int> UserListMap)
 {
     List = UserListMap;
-    //qDebug()<<UserListMap;
     tabl->clear();
     int row=0;
     tabl->setRowCount(row);
@@ -131,7 +129,6 @@ void AdminInterface::editPointUser()
     else
     {
        QString nameStudent = index[0]->text();
-       //unsigned int number = List[nameStudent];
        emit createTablePoint(nameStudent);
        emit idUser(nameStudent);
        panelForEdit->show();

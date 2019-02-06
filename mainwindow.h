@@ -12,6 +12,7 @@
 #include <QMultiMap>
 #include <QPair>
 #include <QMessageBox>
+#include <QDir>
 
 namespace Ui {
 class MainWindow;

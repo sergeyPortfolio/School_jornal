@@ -1,5 +1,4 @@
 #include "authorform.h"
-#include <QDebug>
 #include <QFile>
 
 authorForm::authorForm(QWidget *parent) : QWidget(parent)
@@ -19,11 +18,11 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
                ForReadclass.remove("\n");
                ForReadname.remove("\n");
                ForReadpass.remove("\n");
-               qDebug() << ForReadname.toUtf8();
+
         }
         else
         {
-            qDebug()<< "don't open file";
+            //qDebug()<< "don't open file";
         }
 
     m_backGroundColor = Qt::white;

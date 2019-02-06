@@ -8,18 +8,23 @@ DataBase::DataBase(QObject *parent) : QObject(parent)
 void DataBase::connectToDataBase()
 {
     db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("localhost");
+    db.setHostName("95.46.99.156");
+    db.setPort(3306);
+
     db.setDatabaseName("school_jornal");
-    db.setUserName("root");
+    db.setUserName("user");
     db.setPassword("root");
     if(!db.open()){
-        qDebug() << db.lastError().text() << "V KONECTION";
+       // qDebug() << db.lastError().text() << "V KONECTION"
+        message = new QMessageBox();
+        message->setText(db.lastError().text());
+        message->show();
 
     }
     else
     {
          query = db.exec("SET NAMES 'utf8'");
-        qDebug() << "sucsec" ;
+       // qDebug() << "sucsec" ;
     }
 }
 
@@ -51,7 +56,7 @@ void DataBase::createTableRaiting(QString nameUserKey)
     }
     else
     {
-        qDebug() << "no discipline";
+       // qDebug() << "no discipline";
     }
    if(query.exec("SELECT disc_name,type_point,point FROM point WHERE id_user = "+idText+" ORDER BY id DESC"))
    {
@@ -85,7 +90,7 @@ void DataBase::createTableRaiting(QString nameUserKey)
    }
    else
    {
-        qDebug() << "no Point";
+       // qDebug() << "no Point";
    }
 }
 
@@ -102,7 +107,7 @@ void DataBase::createTableDiscipline()
     }
     else
     {
-        qDebug() << "no discip";
+        //qDebug() << "no discip";
     }
 }
 
@@ -155,7 +160,7 @@ void DataBase::editPointSlot(QString idName, QString nameDisc, QString Type, QSt
 
 void DataBase::deleteAllPointSlot(QString idName, QString nameDisc)
 {
-    qDebug() <<idName << nameDisc;
+    //qDebug() <<idName << nameDisc;
     unsigned int id = myMapUserList[idName];
     if(query.exec("DELETE FROM point WHERE id_user ='"+QString::number(id)+"' AND disc_name ='"+nameDisc+"' AND type_point = 'local'"))
     {
@@ -185,7 +190,7 @@ void DataBase::createTableListUser()
   }
   else
   {
-       qDebug() << "no User";
+       //qDebug() << "no User";
   }
 }
 
@@ -228,7 +233,7 @@ void DataBase::AuthorSql(const QString city, const QString school, const QString
         QString accses;
         while(query.next())
         {
-            qDebug() << query.value(0).toInt();
+           // qDebug() << query.value(0).toInt();
            // qDebug() << query.value(1).toString();
            id = query.value(0).toInt();
            law = query.value(1).toString();
@@ -254,7 +259,7 @@ void DataBase::AuthorSql(const QString city, const QString school, const QString
     }
     else
     {
-        qDebug() << "no Autor";
+       // qDebug() << "no Autor";
     }
 }
 

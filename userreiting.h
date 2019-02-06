@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include <QVBoxLayout>
-#include <QDebug>
 #include <QTableWidget>
 #include <QMultiMap>
 

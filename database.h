@@ -9,10 +9,10 @@
 #include <QSqlDatabase>
 #include <QFile>
 #include <QDate>
-#include <QDebug>
 #include <QMap>
 #include <QMultiMap>
-#include <QTextCodec>
+#include <QVariant>
+#include <QMessageBox>
 
 class DataBase : public QObject
 {
@@ -25,6 +25,7 @@ private:
      QString SchoolAdmin;
      QString ClassAdmin;
      QString CityAdmin;
+     QMessageBox *message;
 public:
     explicit DataBase(QObject *parent = nullptr);
     signals:

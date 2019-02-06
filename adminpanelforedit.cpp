@@ -1,5 +1,4 @@
 #include "adminpanelforedit.h"
-#include <QDebug>
 
 AdminPanelForEdit::AdminPanelForEdit(QWidget *parent) : QWidget(parent)
 {
@@ -39,7 +38,7 @@ void AdminPanelForEdit::createTable(QMap<QString, QMultiMap<QString, int> > map)
     QString key1;
     QString pointCast;
     int row =0;
-qDebug() << map;
+
     int columGlob =0;
     int columLoc = 0;
 
@@ -49,7 +48,7 @@ qDebug() << map;
           QMultiMap<QString,int> Multipair(it.value());
           QTableWidgetItem* itemDiscipline = new QTableWidgetItem;
           itemDiscipline->setText(key1);
-         // itemDiscipline->setCheckState(Qt::Unchecked);
+
           row = tabl->rowCount()+1;
           tabl->setRowCount(row);
           tabl->setVerticalHeaderItem(row-1,itemDiscipline);
@@ -75,7 +74,6 @@ qDebug() << map;
                          QTableWidgetItem* itemPoint = new QTableWidgetItem;
                          pointCast = QString::number(itt.value());
                          itemPoint->setText(pointCast);
-                        // itemPoint->setCheckState(Qt::Unchecked);
                          tabl->setItem(row-1, columGlob-1, itemPoint);
                          tabl->setColumnWidth(columGlob-1,80);
                          itemPoint->setTextAlignment(Qt::AlignCenter);
@@ -88,7 +86,6 @@ qDebug() << map;
                           QTableWidgetItem* itemPoint = new QTableWidgetItem;
                           pointCast = QString::number(itt.value());
                           itemPoint->setText(pointCast);
-                         // itemPoint->setCheckState(Qt::Unchecked);
                           tabl->setItem(row-1, countGlobal, itemPoint);
                           itemPoint->setTextAlignment(Qt::AlignCenter);
                           countGlobal++;
@@ -101,7 +98,6 @@ qDebug() << map;
                           QTableWidgetItem* itemPoint = new QTableWidgetItem;
                           pointCast = QString::number(itt.value());
                           itemPoint->setText(pointCast);
-                          //itemPoint->setCheckState(Qt::Unchecked);
                           tabl->setItem(row-1, columGlob, itemPoint);
                           tabl->setColumnWidth(columGlob,80);
                           itemPoint->setTextAlignment(Qt::AlignCenter);
@@ -121,7 +117,6 @@ qDebug() << map;
                         QTableWidgetItem* itemPoint = new QTableWidgetItem;
                         pointCast = QString::number(itt.value());
                         itemPoint->setText(pointCast);
-                        //itemPoint->setCheckState(Qt::Unchecked);
                         tabl->setItem(row-1, columLoc-1, itemPoint);
                         tabl->setColumnWidth(columLoc-1,80);
                         itemPoint->setTextAlignment(Qt::AlignCenter);
@@ -132,7 +127,6 @@ qDebug() << map;
                          QTableWidgetItem* itemPoint = new QTableWidgetItem;
                          pointCast = QString::number(itt.value());
                          itemPoint->setText(pointCast);
-                        // itemPoint->setCheckState(Qt::Unchecked);
                          tabl->setItem(row-1, countLocal, itemPoint);
                          itemPoint->setTextAlignment(Qt::AlignCenter);
                          countLocal++;
@@ -146,7 +140,6 @@ qDebug() << map;
                          QTableWidgetItem* itemPoint = new QTableWidgetItem;
                          pointCast = QString::number(itt.value());
                          itemPoint->setText(pointCast);
-                        // itemPoint->setCheckState(Qt::Unchecked);
                          tabl->setItem(row-1, columLoc-1, itemPoint);
                          tabl->setColumnWidth(columLoc-1,80);
                          itemPoint->setTextAlignment(Qt::AlignCenter);
@@ -193,7 +186,6 @@ void AdminPanelForEdit::deletePointSlot()
 
 void AdminPanelForEdit::idUserSlot(QString nameUser )
 {
-    qDebug() << nameUser;
     idName = nameUser;
 }
 
@@ -201,7 +193,6 @@ void AdminPanelForEdit::editPointSlot()
 {
     message = new QMessageBox();
     auto index = tabl->selectedItems();
-    //QString disc = tabl->row(index)
     if(index.empty())
     {
         message->setText("Натисніть на назву дисципліни");

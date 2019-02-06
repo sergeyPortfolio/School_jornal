@@ -1,5 +1,4 @@
 #include "insertdisciplinewidget.h"
-#include <QDebug>
 InsertDisciplineWidget::InsertDisciplineWidget(QWidget *parent) : QWidget(parent)
 {
     tabl = new QTableWidget();

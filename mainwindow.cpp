@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -8,7 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     QPixmap logo;
     authorization = new authorForm(parent);
-    logo = QPixmap("D:/MyPrograms/Scholl/Log.bmp");
+    logo = QPixmap(QDir::currentPath()+ "/src/picture/Log.bmp");
+
     ui->label->setPixmap(logo);
     ui->verticalLayout->addWidget(authorization);
     dataBd = new DataBase();

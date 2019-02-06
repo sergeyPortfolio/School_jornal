@@ -1,5 +1,5 @@
 #include "userreiting.h"
-#include <QStringList>
+
 UserReiting::UserReiting(QWidget *parent) : QWidget(parent)
 {
    CentralVLayout = new QVBoxLayout(this);
