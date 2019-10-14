@@ -1,6 +1,10 @@
 #ifndef ADMININTERFACE_H
 #define ADMININTERFACE_H
 
+#include "mymessagebox.h"
+#include "adminpanelforedit.h"
+#include "insertdisciplinewidget.h"
+#include "homeworkboard.h"
 #include <QWidget>
 #include <QTableWidget>
 #include <QHBoxLayout>
@@ -8,10 +12,8 @@
 #include <QPushButton>
 #include <QListWidget>
 #include <QLineEdit>
-#include <mymessagebox.h>
-#include <adminpanelforedit.h>
 #include <QMessageBox>
-#include <insertdisciplinewidget.h>
+
 
 class AdminInterface : public QWidget
 {
@@ -22,18 +24,31 @@ public:
     QPushButton *DeleteStudentButton;
     QPushButton *InsertStudentButton;
     QPushButton *InsertDiscipline;
+    QPushButton *DeleteDiscipline;
+    QPushButton *UseUser;
+    QPushButton *EditHomework;
     MyMessageBox *message;
     AdminPanelForEdit *panelForEdit;
     InsertDisciplineWidget *panelForEditDisc;
+    HomeWorkBoard *homeWorkBoard;
 
 signals:
     void deleteUserSignal(QString);
     void repeatUserList();
     void createTablePoint(QString);
+    void createTablePointOnDiscp(QString);
+    void idDiscp(QString);
     void createTableDiscipline();
     void idUser(QString);
+    void deleteDisciplineSignal(QString);
+    void updateUserLawSignal(QString);
+
+    void createHomeWorkBoard();
+
+
 public slots:
-    void createUserList(QMap<QString,unsigned int> UserListMap);
+    void updateUserLaw();
+    void createUserList(QMap<QString,QPair<unsigned int,QString>> UserListMap);
     void openEditWindowForInsert();
     void closeEditWindowForInsert();
     void deleteUser();
@@ -41,13 +56,22 @@ public slots:
     void editPointUser();
     void closeAdminPanelForEdit();
     void insertDiscipline();
+    void createTableDisciplineSlot(QMap<QString,unsigned int> list);
+    void deleteDiscplineSlot();
+    void resetItemTabl(QTableWidgetItem *Item);
+    void openHomeWorkWindow();
+    void closeHomeWorkWindow();
+
+
 private:
     QHBoxLayout *CentralLayout;
     QVBoxLayout *RightLayout;
     QTableWidget *tabl;
+    QTableWidget *tablDiscipline;
     QMessageBox *DeleteOk;
     QMessageBox *CheckUncheck;
-    QMap<QString,unsigned int> List;
+    QMessageBox *messageDeliteDescipline;
+    QMap<QString,QPair<unsigned int,QString>> List;
 
 };
 

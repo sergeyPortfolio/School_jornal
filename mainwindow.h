@@ -6,9 +6,10 @@
 #include "database.h"
 #include "topinterface.h"
 #include "admininterface.h"
+#include "moderreiting.h"
+#include "userreiting.h"
 #include <QFile>
 #include <QTextStream>
-#include "userreiting.h"
 #include <QMultiMap>
 #include <QPair>
 #include <QMessageBox>
@@ -44,9 +45,11 @@ private:
     DataBase *dataBd;
     UserReiting *user;
     AdminInterface *admin;
+    ModerReiting *moder;
     QMessageBox *message;
 
     void saveDataFile(QString Ucity, QString Uschool,QString Uclass,QString Uname,QString Upass);
+
 };
 
 #endif // MAINWINDOW_H

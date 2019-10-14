@@ -8,7 +8,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-
+#include <QFile>
 
 class authorForm : public QWidget
 {

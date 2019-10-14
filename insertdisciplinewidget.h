@@ -19,20 +19,15 @@ public:
 
 signals:
     void editDisciplineSignal(QString);
-    void deleteDisciplineSignal(QString);
 public slots:
-    void createTableDiscipline(QMap<QString,unsigned int>);
     void editDiscipline();
-    void deleteDiscpline();
 private:
-    QTableWidget *tabl;
     QLabel *label;
     QLineEdit *lineEdit;
     QVBoxLayout *vLayout;
     QHBoxLayout *hLayout;
     QPushButton *edit;
     QMessageBox *message;
-    QPushButton *deleteDics;
 
 };
 

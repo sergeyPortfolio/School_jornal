@@ -7,7 +7,7 @@ TopInterface::TopInterface(QWidget *parent) : QWidget(parent)
     SchoolLabelTop = new QLabel(this);
     ClassLabelTop = new QLabel(this);
     FirstNameLabelTop = new QLabel(this);
-    LogOutButtonTop = new QPushButton("Выйти",this);
+    LogOutButtonTop = new QPushButton("Вихід",this);
     Layout->addWidget(CityLabelTop);
     Layout->addWidget(SchoolLabelTop);
     Layout->addWidget(ClassLabelTop);

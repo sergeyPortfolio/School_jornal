@@ -1,5 +1,5 @@
 #include "authorform.h"
-#include <QFile>
+
 
 authorForm::authorForm(QWidget *parent) : QWidget(parent)
 {
@@ -22,7 +22,7 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
         }
         else
         {
-            //qDebug()<< "don't open file";
+
         }
 
     m_backGroundColor = Qt::white;
@@ -36,9 +36,9 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
     EnterHLayout->setAlignment(Qt::AlignCenter);
 
     CityLabel = new QLabel("Місто",this);
-    SchoolLabel = new QLabel("Школа",this);
+    SchoolLabel = new QLabel("Школа №",this);
     ClassLabel = new QLabel("Клас",this);
-    FirstNameLabel = new QLabel("Прізвище та ініціали",this);
+    FirstNameLabel = new QLabel("Прізвище та ім'я",this);
     PassLabel = new QLabel("Пароль",this);
 
     CityLabel->setFixedWidth(150);
@@ -50,9 +50,13 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
 
 
     CityLineEdit = new QLineEdit(ForReadcity,this);
+    CityLineEdit->setToolTip("Наприклад: Харків");
     SchoolLineEdit = new QLineEdit(ForReadschool,this);
+    SchoolLineEdit->setToolTip("Наприклад: 122");
     ClassLineEdit = new QLineEdit(ForReadclass,this);
+    ClassLineEdit->setToolTip("Наприклад: 10-Г");
     FirstNameLineEdit = new QLineEdit(ForReadname,this);
+    FirstNameLineEdit->setToolTip("Наприклад: Іванов Іван");
     PassLineEdit = new QLineEdit(ForReadpass,this);
     CityLineEdit->setFixedWidth(250);
     SchoolLineEdit->setFixedWidth(250);
@@ -104,7 +108,7 @@ authorForm::authorForm(QWidget *parent) : QWidget(parent)
     PassLineEdit->show();
 
     EnterButton->show();
-    SaveDataCheckBox->setCheckState(Qt::Checked);
+    SaveDataCheckBox->setCheckState(Qt::Unchecked);
     SaveDataCheckBox->show();
 }
 

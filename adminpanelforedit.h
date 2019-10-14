@@ -17,15 +17,22 @@ class AdminPanelForEdit : public QWidget
     Q_OBJECT
 public:
     explicit AdminPanelForEdit(QWidget *parent = nullptr);
-    QPushButton *cancel;
+    QPushButton *update;
 signals:
-    void deletePointSignal(QString,QString,QString,QString);
-    void editPointSignal(QString,QString,QString,QString);
+    void deletePointSignal(QString,QString,QString,QString,QString);
+    void editPointSignal(QString,QString,QString,QStringList);
+    void editPointSignalOnDiscp(QString,QString,QString,QStringList);
     void deleteAllPointSignal(QString,QString);
+    void deleteAllPointSignalOnDiscp(QString,QString);
+    void deletePointOnDiscpSignal(QString,QString,QString,QString,QString);
+    void updatePointSignal(QString,QString,QString);
+    void updatePointSignalonDiscp(QString,QString,QString);
 public slots:
-    void createTable(QMap<QString,QMultiMap<QString,int>> map);
+    void createTable(QMap<QString,QMultiMap<int,QPair<QString,int>>>,QString Flag);
     void deletePointSlot();
+    void updatePoint();
     void idUserSlot(QString);
+    void idDiscpSlot(QString);
     void editPointSlot();
     void deleteAllPointSlot();
 
@@ -41,6 +48,7 @@ private:
     QPushButton *deleteALlPoint;
     QMessageBox *message;
     QString idName;
+    QString Flag;
 
 };
 

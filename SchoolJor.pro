@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui sql
+RC_FILE += MyIcon.rc
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = SchoolJor
@@ -33,7 +34,9 @@ SOURCES += \
     admininterface.cpp \
     mymessagebox.cpp \
     adminpanelforedit.cpp \
-    insertdisciplinewidget.cpp
+    insertdisciplinewidget.cpp \
+    moderreiting.cpp \
+    homeworkboard.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +47,9 @@ HEADERS += \
     admininterface.h \
     mymessagebox.h \
     adminpanelforedit.h \
-    insertdisciplinewidget.h
+    insertdisciplinewidget.h \
+    moderreiting.h \
+    homeworkboard.h
 
 FORMS += \
         mainwindow.ui

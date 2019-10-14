@@ -1,38 +1,21 @@
-#include "adminpanelforedit.h"
+#include "moderreiting.h"
 
-AdminPanelForEdit::AdminPanelForEdit(QWidget *parent) : QWidget(parent)
+ModerReiting::ModerReiting(QWidget *parent) : QWidget(parent)
 {
-    tabl = new QTableWidget(this);
-    globalLocal = new QComboBox(this);
-    label = new QLabel("Введіть оцінку",this);
-    insertPoint = new QPushButton("Додати оцінку",this);
-    update = new QPushButton("Редагувати",this);
-    windowForPoint = new QLineEdit(this);
-    CentralLayout = new QVBoxLayout(this);
-    BottomLayout = new QHBoxLayout(this);
-    deletePoint = new QPushButton("Видалити оцінку",this);
-    deleteALlPoint = new QPushButton("Видалити усі оцінки",this);
+   CentralVLayout = new QVBoxLayout(this);
+   tabl = new QTableWidget(this);
+   CentralVLayout->addWidget(tabl);
+   homeWorkBoard = new HomeWorkBoard();
+   EditHomework = new QPushButton("Додати домашнє завдання", this);
+   CentralVLayout->addWidget(EditHomework);
+   connect(this->homeWorkBoard, SIGNAL(openBoard()), this, SLOT(openHomeWorkWindow()));
 
-    CentralLayout->addWidget(tabl);
-    CentralLayout->addLayout(BottomLayout);
-    BottomLayout->addWidget(globalLocal);
-    BottomLayout->addWidget(label);
-    BottomLayout->addWidget(windowForPoint);
-    BottomLayout->addWidget(insertPoint);
-    BottomLayout->addWidget(deletePoint);
-    BottomLayout->addWidget(deleteALlPoint);
-    BottomLayout->addWidget(update);
-
-    globalLocal->insertItem(0,"Поточна");
-    globalLocal->insertItem(1,"Тематична");
-    connect(this->deletePoint,SIGNAL(clicked()),this,SLOT(deletePointSlot()));
-    connect(this->insertPoint,SIGNAL(clicked()),this,SLOT(editPointSlot()));
-    connect(this->deleteALlPoint,SIGNAL(clicked()),this,SLOT(deleteAllPointSlot()));
-    connect(this->update,SIGNAL(clicked()),this,SLOT(updatePoint()));
+   homeWorkBoard->setRures(true);
 }
-void AdminPanelForEdit::createTable(QMap<QString,QMultiMap<int,QPair<QString,int>>> map,QString flagLocal)
+
+void ModerReiting::createTable(QMap<QString,QMultiMap<int,QPair<QString,int>>> map, QString flagLocal)
 {
-    Flag = flagLocal;
+    //Flag = flagLocal;
     tabl->clear();
     tabl->setRowCount(0);
     tabl->setColumnCount(0);
@@ -183,178 +166,7 @@ void AdminPanelForEdit::createTable(QMap<QString,QMultiMap<int,QPair<QString,int
      tabl->show();
 }
 
-void AdminPanelForEdit::deletePointSlot()
+void ModerReiting::openHomeWorkWindow()
 {
-    message = new QMessageBox();
-    auto index = tabl->selectedItems();
-    if(Flag == "onUser")
-    {
-        if(index.empty())
-        {
-            message->setText("Натисніть на оцінку");
-            message->show();
-        }
-        else
-        {
-            QString Point = index[0]->text();
-            QString Type = tabl->horizontalHeaderItem(index[0]->column())->text();
-            QString NameDiscipline = tabl->verticalHeaderItem(index[0]->row())->text();
-            QString idPoint = index[0]->data(Qt::UserRole).toString();
-
-            emit deletePointSignal(idName,NameDiscipline,Type,Point,idPoint);
-        }
-    }
-    else if(Flag == "onDiscp")
-    {
-        if(index.empty())
-        {
-            message->setText("Натисніть на оцінку");
-            message->show();
-        }
-        else
-        {
-            QString Point = index[0]->text();
-            QString Type = tabl->horizontalHeaderItem(index[0]->column())->text();
-            QString NameUser = tabl->verticalHeaderItem(index[0]->row())->text();
-            QString idPoint = index[0]->data(Qt::UserRole).toString();
-
-            emit deletePointOnDiscpSignal(idName,NameUser,Type,Point,idPoint);
-        }
-    }
-}
-
-void AdminPanelForEdit::updatePoint()
-{
-    message = new QMessageBox();
-    auto index = tabl->selectedItems();
-
-        if(index.empty())
-        {
-            message->setText("Натисніть на оцінку");
-            message->show();
-        }
-        else
-        {
-            if( windowForPoint->text().isEmpty())
-            {
-                message->setText("Введіть оцінку");
-                message->show();
-            }
-            else
-            {
-                QString idPoint = index[0]->data(Qt::UserRole).toString();
-                QString point = windowForPoint->text();
-                windowForPoint->setText(NULL);
-
-                if(Flag == "onUser")
-                {
-
-                    emit updatePointSignal(idPoint,idName,point);
-                }
-                else if(Flag == "onDiscp")
-                {
-
-                    emit updatePointSignalonDiscp(idPoint,idName,point);
-                }
-            }
-        }
-}
-
-void AdminPanelForEdit::idUserSlot(QString nameUser)
-{
-    idName = nameUser;
-}
-
-void AdminPanelForEdit::idDiscpSlot(QString nameDiscp)
-{
-    idName = nameDiscp;
-}
-
-void AdminPanelForEdit::editPointSlot()
-{
-    message = new QMessageBox();
-
-        auto index = tabl->selectedItems();
-        if(index.empty() && Flag == "onUser")
-        {
-            message->setText("Натисніть на назву дисципліни");
-            message->show();
-        }
-        else if(index.empty() && Flag == "onDiscp")
-        {
-            message->setText("Натисніть на прізвище учня");
-            message->show();
-        }
-        else
-        {
-            QString Point;
-            QString Type;
-            QStringList PointArr;
-
-            if( windowForPoint->text().isEmpty())
-            {
-                message->setText("Введіть оцінку, або декілька оцінок через пробіл");
-                message->show();
-            }
-            else
-            {
-                 Point  = windowForPoint->text();
-                 PointArr = Point.split(" ");
-            }
-
-            if(globalLocal->currentText() == "Поточна")
-            {
-                Type = "local";
-            }
-            else
-            {
-                Type = "global";
-            }
-            if(Flag == "onUser")
-            {
-                QString NameDiscipline = tabl->verticalHeaderItem(index[0]->row())->text();
-                emit editPointSignal(idName,NameDiscipline,Type,PointArr);
-                windowForPoint->setText(NULL);
-            }
-            else if( Flag == "onDiscp")
-            {
-                QString NameStudent = tabl->verticalHeaderItem(index[0]->row())->text();
-                emit editPointSignalOnDiscp(idName,NameStudent,Type,PointArr);
-                windowForPoint->setText(NULL);
-            }
-        }
-
-
-}
-
-void AdminPanelForEdit::deleteAllPointSlot()
-{
-    message = new QMessageBox();
-    auto index = tabl->selectedItems();
-    if(Flag == "onUser")
-    {
-        if(index.empty())
-        {
-            message->setText("Натисніть на назву дисципліни");
-            message->show();
-        }
-        else
-        {
-            QString NameDiscipline = tabl->verticalHeaderItem(index[0]->row())->text();
-            emit deleteAllPointSignal(idName,NameDiscipline);
-        }
-    }
-    else if(Flag == "onDiscp")
-    {
-        if(index.empty())
-        {
-            message->setText("Натисніть на прізвище учня");
-            message->show();
-        }
-        else
-        {
-            QString NameUser = tabl->verticalHeaderItem(index[0]->row())->text();
-            emit deleteAllPointSignalOnDiscp(idName,NameUser);
-        }
-    }
+        homeWorkBoard->show();
 }
